@@ -1,5 +1,3 @@
-/*global console*/
-/* jshint esversion:6*/
 (function () {
     "use strict";
 
@@ -72,14 +70,10 @@
             let damage = this.player.strength * this.damage;
             this.enemy.applyDamage(damage);
             console.log(`${this.player.name} attacks with ${this.name} dealing ${damage} damage!`);
-            if (!this.enemy.isAlive()) {
-                console.log(`\n${this.player.name} has defeated the enemy!\n`);
-            } else {
+            // If the enemy has died display that.
+            if (this.enemy.isAlive()) {
                 this.enemy.attack(this.player);
                 console.log(`The enemy strikes and deals ${this.enemy.strength} damage to ${this.player.name}...\n`);
-                if (!this.player.isAlive()) {
-                    console.log(`${this.player.name} has been killed...\n`);
-                }
             }
         }
     };
@@ -128,16 +122,21 @@
             // Assign a random player and a random enemy each to a variable to have them fight!
             let good = this.players[Math.floor(Math.random() * (this.players.length - 0)) + 0];
             let evil = this.enemies[Math.floor(Math.random() * (this.enemies.length - 0)) + 0];
-            // Assign a random weapon from the cache to use in combat.
-            let weapon = good.attackWith();
-            // Call the weapon's attack function using the 2 random variables made earlier.
-            weapon.attack(good, evil);
 
-            // If the player died add one to deadHeroes, but if the enemy died add one to deadEnemies.
-            if (!good.isAlive()) {
-                this.deadHeroes++;
-            } else if (!evil.isAlive()) {
-                this.deadEnemies++;
+            if (good.isAlive() && evil.isAlive()) {
+                // Assign a random weapon from the cache to use in combat.
+                let weapon = good.attackWith();
+                // Call the weapon's attack function using the 2 random variables made earlier.
+                weapon.attack(good, evil);
+
+                // If the player died add one to deadHeroes, but if the enemy died add one to deadEnemies.
+                if (!good.isAlive()) {
+                    this.deadHeroes++;
+                    console.log(`${good.name} has died...\n`);
+                } else if (!evil.isAlive()) {
+                    this.deadEnemies++;
+                    console.log(`\n${good.name} has defeated the enemy!\n`);
+                }
             }
         } while (this.deadHeroes < this.players.length && this.deadEnemies < this.enemies.length);
 
