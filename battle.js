@@ -67,21 +67,17 @@
         this.player = player;
         this.enemy = enemy;
 
-        let pAlive = this.player.isAlive();
-        let eAlive = this.enemy.isAlive();
-
-        while (pAlive && eAlive) {
+        // This loop represents the core combat loop.
+        while (this.player.isAlive() && this.enemy.isAlive()) {
             let damage = this.player.strength * this.damage;
             this.enemy.applyDamage(damage);
             console.log(`${this.player.name} attacks with ${this.name} dealing ${damage} damage!`);
-            eAlive = this.enemy.isAlive();
-            if (!eAlive) {
+            if (!this.enemy.isAlive()) {
                 console.log(`\n${this.player.name} has defeated the enemy!\n`);
             } else {
                 this.enemy.attack(this.player);
                 console.log(`The enemy strikes and deals ${this.enemy.strength} damage to ${this.player.name}...\n`);
-                pAlive = this.player.isAlive();
-                if (!pAlive) {
+                if (!this.player.isAlive) {
                     console.log(`\n${this.player.name} has been killed...\n`);
                 }
             }
