@@ -1,6 +1,3 @@
-/*global console*/
-/*jshint esversion: 6*/
-
 (function () {
     "use strict";
 
@@ -13,6 +10,7 @@
 
     function Weapon(name) {
         this.name = name;
+        // Damage is calculated by generating a random number between 1 and 5.
         this.damage = Math.floor(Math.random() * (Math.floor(5) - Math.ceil(1) + 1)) + Math.ceil(1);
     }
 
@@ -41,6 +39,7 @@
     };
 
     Player.prototype.attackWith = function () {
+        // Return a random weapon from the weapons cache by returning a random number between 0 and 7.
         return this.weapons[Math.floor(Math.random() * Math.floor(8) - Math.ceil(0)) + Math.ceil(0)];
     };
 
@@ -115,12 +114,17 @@
         let deadHeroes = 0;
         let deadEnemies = 0;
 
+        // This loop will run until one side is completely wiped out.
         do {
+            // Assign a random player and a random enemy each to a variable to have them fight!
             let good = this.players[Math.floor(Math.random() * Math.floor(4) - Math.ceil(0)) + Math.ceil(0)];
             let evil = this.enemies[Math.floor(Math.random() * Math.floor(19) - Math.ceil(0)) + Math.ceil(0)];
+            // Assign a random weapon from the cache to use in combat.
             let weapon = good.attackWith();
+            // Call the weapon's attack function using the 2 random variables made earlier.
             weapon.attack(good, evil);
 
+            // If the player died add one to deadHeroes, but if the enemy died add one to deadEnemies.
             if (!good.isAlive()) {
                 deadHeroes++;
             } else if (!evil.isAlive()) {
@@ -130,6 +134,8 @@
 
         console.log("These players survived!\n");
 
+        // This will check deadHeroes and deadEnemies to let you know what the endgame state is.
+        // If any of your players survived then you win!
         if (deadHeroes === this.players.length) {
             console.log("None...");
             console.log("\nSorry, Scarlet Byte has defeated you and conquered the free world.");
