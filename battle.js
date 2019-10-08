@@ -41,8 +41,8 @@
     };
 
     Player.prototype.attackWith = function () {
-        // Return a random weapon from the weapons cache by returning a random number between 0 and 7.
-        return this.weapons[Math.floor(Math.random() * Math.floor(8) - Math.ceil(0)) + Math.ceil(0)];
+        // Return a random weapon from the weapons cache by returning a random number between 0 and the length of the weaponsCache array maximum exclusive.
+        return this.weapons[Math.floor(Math.random() * (this.weapons.length - 0) + 0)];
     };
 
     Enemy.prototype.applyDamage = function (damage) {
@@ -127,8 +127,8 @@
         // This loop will run until one side is completely wiped out.
         do {
             // Assign a random player and a random enemy each to a variable to have them fight!
-            let good = this.players[Math.floor(Math.random() * Math.floor(4) - Math.ceil(0)) + Math.ceil(0)];
-            let evil = this.enemies[Math.floor(Math.random() * Math.floor(19) - Math.ceil(0)) + Math.ceil(0)];
+            let good = this.players[Math.floor(Math.random() * (this.players.length - 0)) + 0];
+            let evil = this.enemies[Math.floor(Math.random() * (this.enemies.length - 0)) + 0];
             // Assign a random weapon from the cache to use in combat.
             let weapon = good.attackWith();
             // Call the weapon's attack function using the 2 random variables made earlier.
