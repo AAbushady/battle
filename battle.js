@@ -77,11 +77,10 @@
             } else {
                 this.enemy.attack(this.player);
                 console.log(`The enemy strikes and deals ${this.enemy.strength} damage to ${this.player.name}...\n`);
-                if (!this.player.isAlive) {
-                    console.log(`\n${this.player.name} has been killed...\n`);
+                if (!this.player.isAlive()) {
+                    console.log(`${this.player.name} has been killed...\n`);
                 }
             }
-
         }
     };
 
