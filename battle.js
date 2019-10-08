@@ -1,3 +1,5 @@
+/*global console*/
+/* jshint esversion:6*/
 (function () {
     "use strict";
 
@@ -71,9 +73,19 @@
         while (pAlive && eAlive) {
             let damage = this.player.strength * this.damage;
             this.enemy.applyDamage(damage);
+            console.log(`${this.player.name} attacks with ${this.name} dealing ${damage} damage!`);
             eAlive = this.enemy.isAlive();
-            this.enemy.attack(this.player);
-            pAlive = this.player.isAlive();
+            if (!eAlive) {
+                console.log(`\n${this.player.name} has defeated the enemy!\n`);
+            } else {
+                this.enemy.attack(this.player);
+                console.log(`The enemy strikes and deals ${this.enemy.strength} damage to ${this.player.name}...\n`);
+                pAlive = this.player.isAlive();
+                if (!pAlive) {
+                    console.log(`\n${this.player.name} has been killed...\n`);
+                }
+            }
+
         }
     };
 
@@ -84,7 +96,7 @@
         }
     };
 
-    BattleSimulation.prototype.createPlayers = function () {
+    BattleSimulation.prototype.armory = function () {
         let katana = new Weapon("Katana");
         let nodachi = new Weapon("Nodachi");
         let shuriken = new Weapon("Shuriken");
@@ -94,25 +106,27 @@
         let whip = new Weapon("Whip");
         let moonLight = new Weapon("Moonlight Greatsword");
 
-        let weaponsCache = [katana, nodachi, shuriken, bat, handgun, persona, whip, moonLight];
+        this.weaponsCache = [katana, nodachi, shuriken, bat, handgun, persona, whip, moonLight];
+        return this.weaponsCache;
+    };
 
-        let player1 = new Player("Alex", weaponsCache);
-        let player2 = new Player("Ariel", weaponsCache);
-        let player3 = new Player("Marilyn", weaponsCache);
-        let player4 = new Player("Austin", weaponsCache);
-        let player5 = new Player("Jay", weaponsCache);
+    BattleSimulation.prototype.createPlayers = function () {
+        let player1 = new Player("Alex", this.armory());
+        let player2 = new Player("Ariel", this.armory());
+        let player3 = new Player("Marilyn", this.armory());
+        let player4 = new Player("Austin", this.armory());
+        let player5 = new Player("Jay", this.armory());
 
         this.players.push(player1, player2, player3, player4, player5);
     };
 
     BattleSimulation.prototype.run = function () {
         console.log("\nSimulating Battle\n");
-
         this.createEnemies();
+        this.armory();
         this.createPlayers();
-
-        let deadHeroes = 0;
-        let deadEnemies = 0;
+        this.deadHeroes = 0;
+        this.deadEnemies = 0;
 
         // This loop will run until one side is completely wiped out.
         do {
@@ -126,27 +140,30 @@
 
             // If the player died add one to deadHeroes, but if the enemy died add one to deadEnemies.
             if (!good.isAlive()) {
-                deadHeroes++;
+                this.deadHeroes++;
             } else if (!evil.isAlive()) {
-                deadEnemies++;
+                this.deadEnemies++;
             }
-        } while (deadHeroes < this.players.length && deadEnemies < this.enemies.length);
+        } while (this.deadHeroes < this.players.length && this.deadEnemies < this.enemies.length);
 
+        this.aftermath();
+    };
+
+    BattleSimulation.prototype.aftermath = function () {
         console.log("These players survived!\n");
 
         // This will check deadHeroes and deadEnemies to let you know what the endgame state is.
         // If any of your players survived then you win!
-        if (deadHeroes === this.players.length) {
+        if (this.deadHeroes === this.players.length) {
             console.log("None...");
             console.log("\nSorry, Scarlet Byte has defeated you and conquered the free world.");
-        } else if (deadEnemies === this.enemies.length) {
+        } else if (this.deadEnemies === this.enemies.length) {
             for (let cnt = 0, heroes = this.players.length; cnt < heroes; cnt++) {
                 if (this.players[cnt].isAlive())
                     console.log(this.players[cnt].name);
             }
             console.log("\nCongratulations, you have defated Scarlet Byte!!");
         }
-
     };
 
     let sim = new BattleSimulation();
